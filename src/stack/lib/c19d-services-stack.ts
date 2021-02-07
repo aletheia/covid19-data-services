@@ -4,7 +4,7 @@ import {NodejsFunction} from '@aws-cdk/aws-lambda-nodejs';
 import {Rule, Schedule} from '@aws-cdk/aws-events';
 import {LambdaFunction} from '@aws-cdk/aws-events-targets';
 
-export class C19DServicesStack extends cdk.Stack {
+export class C19dServicesStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
