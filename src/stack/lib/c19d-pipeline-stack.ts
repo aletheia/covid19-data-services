@@ -1,8 +1,12 @@
 import {Construct, Stack, StackProps, Stage, SecretValue} from '@aws-cdk/core';
 import {CdkPipeline, SimpleSynthAction} from '@aws-cdk/pipelines';
 import {Artifact} from '@aws-cdk/aws-codepipeline';
-import {GitHubSourceAction} from '@aws-cdk/aws-codepipeline-actions';
+import {
+  CodeBuildAction,
+  GitHubSourceAction,
+} from '@aws-cdk/aws-codepipeline-actions';
 import {C19dServicesStack} from './c19d-services-stack';
+import {LinuxBuildImage, Project} from '@aws-cdk/aws-codebuild';
 
 class C19dApplication extends Stage {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -39,6 +43,21 @@ export class C19dPipelineStack extends Stack {
       synthAction,
     });
 
-    pipeline.addApplicationStage(new C19dApplication(this, 'C19dApplication'));
+    // The docker build stage is added
+    const buildStage = pipeline.addStage('AppBuild');
+    buildStage.addActions(
+      new CodeBuildAction({
+        actionName: 'DockerBuild',
+        input: sourceArtifact,
+        project: new Project(this, 'DockerBuild', {
+          environment: {
+            buildImage: LinuxBuildImage.STANDARD_4_0,
+            privileged: true,
+          },
+        }),
+      })
+    );
+
+    // pipeline.addApplicationStage(new C19dApplication(this, 'C19dApplication'));
   }
 }
