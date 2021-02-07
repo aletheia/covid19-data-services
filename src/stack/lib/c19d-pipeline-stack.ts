@@ -43,21 +43,21 @@ export class C19dPipelineStack extends Stack {
       synthAction,
     });
 
-    // The docker build stage is added
-    const buildStage = pipeline.addStage('AppBuild');
-    buildStage.addActions(
-      new CodeBuildAction({
-        actionName: 'DockerBuild',
-        input: sourceArtifact,
-        project: new Project(this, 'DockerBuild', {
-          environment: {
-            buildImage: LinuxBuildImage.STANDARD_4_0,
-            privileged: true,
-          },
-        }),
-      })
-    );
+    // // The docker build stage is added
+    // const buildStage = pipeline.addStage('AppBuild');
+    // buildStage.addActions(
+    //   new CodeBuildAction({
+    //     actionName: 'DockerBuild',
+    //     input: sourceArtifact,
+    //     project: new Project(this, 'DockerBuild', {
+    //       environment: {
+    //         buildImage: LinuxBuildImage.STANDARD_4_0,
+    //         privileged: true,
+    //       },
+    //     }),
+    //   })
+    // );
 
-    // pipeline.addApplicationStage(new C19dApplication(this, 'C19dApplication'));
+    pipeline.addApplicationStage(new C19dApplication(this, 'C19dApplication'));
   }
 }
